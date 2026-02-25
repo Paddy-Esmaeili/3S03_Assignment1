@@ -1,66 +1,45 @@
 import java.util.*;
 
-public interface CatanAgent {
-    void init(int playerId);
-    Move chooseInitialSettlement(GameState state);
-    Move chooseInitialRoad(GameState state);
-    Move chooseMove(GameState state);
-    Map<ResourceType, Integer> chooseDiscard(GameState state,int discardCount);
-    ResourceType chooseResource(GameState state);
-    int chooseRobberTarget(GameState state, List<Integer> possibleTargets);
-    DevelopmentCard chooseDevelopmentCard(GameState state);
-}
-
 public class DummyAgent implements CatanAgent {
     private int playerId;
-    
     @Override
     public void init(int playerId) {
         this.playerId = playerId;
     }
-
     @Override
     public Move chooseInitialSettlement(GameState state) {
-        // Just pick the first valid option
-        return state.getValidSettlements(playerId).get(0);
+        return new Move();
     }
-
     @Override
     public Move chooseInitialRoad(GameState state) {
-        return state.getValidRoads(playerId).get(0);
+        return new Move();
     }
-
     @Override
     public Move chooseMove(GameState state) {
-        // Just return any legal move
-        List<Move> moves = state.getLegalMoves(playerId);
-        return moves.get(0);
+        return new Move();
     }
-
     @Override
-    public Map<ResourceType, Integer> chooseDiscard(GameState state, int discardCount) {
-        // Discard the first resources arbitrarily
+    public Map<ResourceType, Integer> chooseDiscard(GameState state, int discardCount){
         Map<ResourceType, Integer> discard = new HashMap<>();
-        for (ResourceType res : state.getPlayerResources(playerId).keySet()) {
-            discard.put(res, 1);
-            if (discard.size() >= discardCount) break;
+        if (discardCount > 0) {
+            discard.put(ResourceType.WOOD, discardCount);
         }
         return discard;
     }
-
     @Override
     public ResourceType chooseResource(GameState state) {
-        return ResourceType.WOOD; // arbitrary
+        return ResourceType.WOOD;
     }
-
     @Override
     public int chooseRobberTarget(GameState state, List<Integer> possibleTargets) {
-        return possibleTargets.get(0); // pick first target
+        if (possibleTargets == null || possibleTargets.isEmpty()) {
+            return -1;
+        }
+        return possibleTargets.get(0);
     }
-
     @Override
     public DevelopmentCard chooseDevelopmentCard(GameState state) {
-        return DevelopmentCard.KNIGHT; // arbitrary choice
+        return DevelopmentCard.KNIGHT;
     }
 }
 
